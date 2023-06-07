@@ -1,0 +1,31 @@
+import { useState, useRef } from "react";
+import Tooltip from "./Tooltip.jsx";
+
+export default function ButtonWithTooltip({ tooltipContent, ...rest }) {
+  const [targetRect, setTargetRect] = useState(null);
+  const buttonRef = useRef(null);
+  return (
+    <>
+      <button
+        {...rest}
+        ref={buttonRef}
+        onPointerEnter={() => {
+          const rect = buttonRef.current.getBoundingClientRect();
+          console.log('rect ===', rect);
+          setTargetRect({
+            left: rect.left,
+            top: rect.top,
+            right: rect.right,
+            bottom: rect.bottom,
+          });
+        }}
+        onPointerLeave={() => {
+          setTargetRect(null);
+        }}
+      />
+      {targetRect !== null && (
+        <Tooltip targetRect={targetRect}>{tooltipContent}</Tooltip>
+      )}
+    </>
+  );
+}
